@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# This script must be run as root, otherwise, it alerts the user and quits.
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
+# Check if we're root and re-run if not.
+if [ $(id -u) -ne 0 ]; then
+    echo "Script not running as root, trying to elevate to root..."
+    sudo bash "$0" "$@"
+    exit $?
 fi
 
 # Get the PID of the process "/System/Library/CoreServices/backupd.bundle/Contents/Resources/backupd"
